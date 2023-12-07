@@ -3,16 +3,22 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BuildingActor.h"
-#include "UObject/Object.h"
+#include "ResourceBuildingActor.h"
+#include "Task_Description.h"
 #include "HQBuilding.generated.h"
 
-/**
- * 
- */
 UCLASS()
-class BUILDING_API AHQBuilding : public ABuildingActor
+class BUILDING_API AHQBuilding : public AResourceBuildingActor
 {
 	GENERATED_BODY()
-	
+
+public:
+	AHQBuilding();
+
+private:
+	UPROPERTY()
+	FTDTaskQueue TaskQueue;
+
+	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaSeconds) override;
 };
