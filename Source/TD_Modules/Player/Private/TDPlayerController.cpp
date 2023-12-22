@@ -34,10 +34,10 @@ void ATDPlayerController::ComputeCameraMovement(const float DeltaSeconds)
 	PositionToReach += GetCameraXYMovement(XScreenSize, YScreenSize, MouseX, MouseY);
 	AdjustCameraToGroundHeight(DeltaSeconds);
 	
-	MoveCamera();
+	MoveCamera(DeltaSeconds);
 }
 
-void ATDPlayerController::MoveCamera()
+void ATDPlayerController::MoveCamera(const float DeltaSeconds)
 {
 	GetPawn()->SetActorLocation(PositionToReach);
 }
@@ -49,7 +49,7 @@ void ATDPlayerController::ZoomCamera(const FInputActionValue& InputActionValue)
 	HeightOffsetCamera -= ActionValue * ScrollSpeed;
 	HeightOffsetCamera = FMath::Clamp(HeightOffsetCamera, MinHeightOffsetCamera, MaxHeightOffsetCamera);
 }
-
+//TODO how can we constrain the rotation when we would produce a unit
 void ATDPlayerController::RotateCamera(const FInputActionValue& InputActionValue)
 {
 	float RotationAmount = InputActionValue.Get<float>();
@@ -172,7 +172,6 @@ void ATDPlayerController::Tick(float DeltaSeconds)
 	Super::Tick(DeltaSeconds);
 
 	ComputeCameraMovement(DeltaSeconds);
-	GetPawn()->SetActorLocation(PositionToReach);
 }
 
 

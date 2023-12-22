@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "BuildingDataBase.h"
+#include "BuildingSystemSettings.h"
 #include "InputActionValue.h"
 #include "Subsystems/WorldSubsystem.h"
 #include "BuildingSubsystem.generated.h"
@@ -23,10 +24,13 @@ public:
 	
 	UPROPERTY()
 	TObjectPtr<UBuildingDataBase> BuildingDataBase = nullptr;
+
+	UPROPERTY()
+	TObjectPtr<UBuildingSystemSettings> BuildingSystemSettings = nullptr;
 	
 	UPROPERTY()
 	FOnBuildingModeActivated OnBuildingModeActivated;
-
+	
 	UPROPERTY()
 	FName CurrentlySelectedBuilding = "NONE";
 
@@ -36,24 +40,34 @@ public:
 private:
 
 	UPROPERTY()
-	TObjectPtr<AActor> CurrentlySpawnedBuildingGhost;
+	TObjectPtr<ABuildingGhost> CurrentlySpawnedBuildingGhost;
 
 	UPROPERTY()
 	TObjectPtr<ATDPlayerController> PlayerController;
 	
 	bool bIsBuildingModeActive = false;
-
-	bool IsBuildingGhostValid();
+	bool IsSTRGPressed = false;
+	
 	void SetBuildingMode(const FInputActionValue& InputActionValue);
+	void SetSTRGEnabled(const FInputActionValue& InputActionValue);
+	void SetSTRGDisabled(const FInputActionValue& InputActionValue);
 	void PlaceSelectedBuilding(const FInputActionValue& InputActionValue);
 	void SpawnBuildingGhost(const TObjectPtr<UClass> BuildingGhostBP);
+	void ClearSelectedBuilding();
 	void MoveBuildingGhost();
+	bool IsValidBuildingSelected();
+	bool IsValidBuildingPlace();
+	bool IsBuildingGhostValid();
+	bool IsPlaceMultipleBuildingsEnabled();
 
 	///Returns the location and rotation of the hitlocation
-	FTransform GetMouseCursorHitTransform() const;
+	/// We pass in a trace channel to get different results and
+	/// informations from the mouse hit
+	FTransform GetMouseCursorHitTransform(const ECollisionChannel ChannelToTrace) const;
 	
 	virtual TStatId GetStatId() const override;
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
 	virtual void Deinitialize() override;
 	virtual void OnWorldBeginPlay(UWorld& InWorld) override;
 	virtual void Tick(float DeltaTime) override;

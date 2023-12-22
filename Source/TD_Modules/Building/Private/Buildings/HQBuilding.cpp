@@ -1,5 +1,6 @@
-#include "HQBuilding.h"
-#include "Task_Description.h"
+#include "Buildings/HQBuilding.h"
+
+#include "TaskQueueComponent.h"
 
 // Sets default values
 AHQBuilding::AHQBuilding()
@@ -8,20 +9,8 @@ AHQBuilding::AHQBuilding()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
-void AHQBuilding::BeginPlay()
+void AHQBuilding::SetupBuilding(const TObjectPtr<const UBuildingData> BuildingData)
 {
-	Super::BeginPlay();
-
-	for (const TObjectPtr<UTaskDescription>& TaskDescription : TaskThisBuildingIsAbleToExecute)
-	{
-		TaskQueue.PushTaskToQueue(TaskDescription->CreateTaskObject(this));
-	}
-}
-
-void AHQBuilding::Tick(float DeltaSeconds)
-{
-	Super::Tick(DeltaSeconds);
-
-	TaskQueue.ProcessCurrentTask(DeltaSeconds);
+	Super::SetupBuilding(BuildingData);
 }
 

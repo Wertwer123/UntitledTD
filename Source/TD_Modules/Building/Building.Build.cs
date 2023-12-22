@@ -12,7 +12,10 @@ public class Building : ModuleRules
             {
                 "Core", 
                 "EnhancedInput", 
-                "Engine",
+                "Engine", 
+                
+                "TDInterfaces",
+                "MiscGameplay",
             }
         );
 
@@ -23,8 +26,11 @@ public class Building : ModuleRules
                 "Engine",
                 "Slate",
                 "SlateCore", 
+                
                 "Player", 
-                "TD_Helpers"
+                "TD_Helpers",
+                "TDTaskSystem",
+                "TD_UI", 
             }
         );
     }

@@ -1,26 +1,49 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "BuildingActor.h"
+#include "BuildingData.h"
+#include "PlayerHud.h"
+#include "TaskQueueComponent.h"
+#include "Kismet/GameplayStatics.h"
 
+DEFINE_LOG_CATEGORY(LogBuildings)
 
-// Sets default values
 ABuildingActor::ABuildingActor()
 {
-	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
+
+	StatsComponent = CreateDefaultSubobject<UTDStatsComponent>("BuildingStats");
+	TaskQueueComponent = CreateDefaultSubobject<UTaskQueueComponent>("TaskQueueComponent");
+	SMC = CreateDefaultSubobject<UStaticMeshComponent>("BuildingMesh");
+	SMC->SetCollisionProfileName("Building");
+	SetRootComponent(SMC);
 }
 
-// Called when the game starts or when spawned
-void ABuildingActor::BeginPlay()
+void ABuildingActor::OnSelect()
 {
-	Super::BeginPlay();
+	OnBuildingSelected.Execute(BuildingName);
+}
+
+void ABuildingActor::RecieveDamage(const ETDOffensiveStatType DmgToTake, const int32 Dmg)
+{
 	
 }
 
-// Called every frame
-void ABuildingActor::Tick(float DeltaTime)
+void ABuildingActor::RecieveTask(const TSharedPtr<FTDTask> RecievedTask)
 {
-	Super::Tick(DeltaTime);
+	if(RecievedTask->IsQueable())
+	{
+		TaskQueueComponent->PushTaskToQueue(RecievedTask);
+		
+		APlayerHud* PlayerHud = Cast<APlayerHud>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
+	
+	}
 }
+
+void ABuildingActor::SetupBuilding(const TObjectPtr<const UBuildingData> BuildingData)
+{
+	TaskThisBuildingIsAbleToExecute = BuildingData->TaskThisBuildingIsAbleToExecute;
+	BuildingName = BuildingData->GetBuildingName();
+	
+	GetStats()->InitializeStats(BuildingData->DefensiveStats, BuildingData->OffensiveStats);
+}
+
 

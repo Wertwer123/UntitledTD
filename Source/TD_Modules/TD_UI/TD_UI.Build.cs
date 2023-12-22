@@ -5,12 +5,15 @@ public class TD_UI : ModuleRules
     public TD_UI(ReadOnlyTargetRules Target) : base(Target)
     {
         PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
-
+        OptimizeCode = CodeOptimization.InShippingBuildsOnly;
+        
         PublicDependencyModuleNames.AddRange(
             new string[]
             {
                 "Core", 
                 "UMG",
+                "UMGEditor",
+                "UnrealEd",
                 
                 "Building", 
                 "EnhancedInput",
@@ -25,7 +28,11 @@ public class TD_UI : ModuleRules
                 "Slate",
                 "SlateCore", 
                 
-                "Player"
+                "Player",
+                "TDTaskSystem",
+                "TDInterfaces",
+                "MiscGameplay",
+                "TDUnits"
             }
         );
     }

@@ -1,7 +1,8 @@
 #pragma once
 
-class EResourceType
+UENUM()
+enum class EResourceType
 {
-public:
-	
+	AlienBlood,
+	Wood
 };

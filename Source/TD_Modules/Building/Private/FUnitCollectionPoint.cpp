@@ -1,13 +1,12 @@
-$COPYRIGHT_LINE$
+// Fill out your copyright notice in the Description page of Project Settings.
+#include "FUnitCollectionPoint.h"
 
-
-$MY_HEADER_INCLUDE_DIRECTIVE$
-
-
-$UNPREFIXED_CLASS_NAME$::$UNPREFIXED_CLASS_NAME$()
+FVector FUnitCollectionPoint::GetUnitMovePointWorld(const FTransform& SourceTransform) const
 {
+	return SourceTransform.TransformPosition(RelativePositionOfMovePoint);
 }
 
-$UNPREFIXED_CLASS_NAME$::~$UNPREFIXED_CLASS_NAME$()
+void FUnitCollectionPoint::SetUnitMovePointRelative(const FTransform& SourceTransform, const FVector& NewWorldPos)
 {
+	RelativePositionOfMovePoint = SourceTransform.InverseTransformPosition(NewWorldPos);
 }

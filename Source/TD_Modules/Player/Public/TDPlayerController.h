@@ -72,7 +72,7 @@ private:
 	float CurrentDegreesOnCircle = 0;
 	float CircleRadius = 0;
 	
-	void MoveCamera();
+	void MoveCamera(const float DeltaSeconds);
 	void ZoomCamera(const FInputActionValue& InputActionValue);
 	void RotateCamera(const FInputActionValue& InputActionValue);
 	void ComputeCameraMovement(const float DeltaSeconds);

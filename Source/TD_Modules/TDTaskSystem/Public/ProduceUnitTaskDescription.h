@@ -1,35 +1,47 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
 #include "TDTaskDescription.h"
+#include "UnitDataBase.h"
 #include "ProduceUnitTaskDescription.generated.h"
 
-struct FProduceUnitTask : public  FTDTask
+USTRUCT()
+struct TDTASKSYSTEM_API FProduceUnitTask : public  FTDTask
 {
-	int32 ProdutionTime;
+	GENERATED_BODY()
+	
+	UPROPERTY()
+	int32 ProdutionTime = 0;
+	
+	UPROPERTY()
 	float RunTime = 0;
-	//TODO Exchange later with actual unit class
-	TSubclassOf<AActor> UnitToSpawn;
-
+	
+	UPROPERTY()
+	TObjectPtr<const UUnitData> UnitData;
+	
 	///Initializes the task with the right default values so that we cant do anything wrong in the editor
 	///Because code bigger human 
-	virtual void InitTask(const TObjectPtr<AActor> InExecutor) override;
+	virtual void InitTask(const TObjectPtr<UObject> InExecutor, const TObjectPtr<UTexture2D> TaskDisplayTexture, const bool bIsTaskQueable) override;
 	virtual void ExecuteTask(const float DeltaSeconds = 0) override;
 	virtual bool IsTaskFinished() override;
 };
 
 UCLASS()
-class TASKSYSTEM_API UProduceUnitTaskDescription : public UTaskDescription
+class TDTASKSYSTEM_API UProduceUnitTaskDescription : public UTaskDescription
 {
 	GENERATED_BODY()
-
-	UPROPERTY(EditAnywhere, Category= "Task|Unit")
-	TSubclassOf<AActor> UnitToProduce;
+	
+	UPROPERTY(EditAnywhere, meta=( GetOptions = "GetAllUnits"), Category= "Task|Unit")
+	FName UnitToProduce;
 
 	UPROPERTY(EditAnywhere, Category= "Task|Unit")
 	int32 ProductionTime = 2;
 
-	virtual TSharedPtr<FTDTask> CreateTaskObject(const TObjectPtr<AActor> Executor) override;
+	UPROPERTY(EditDefaultsOnly, Category= "Task|Unit")
+	TObjectPtr<UUnitDataBase> UnitDataBase;
+
+	UFUNCTION()
+	TArray<FName> GetAllUnits();
+	
+	virtual TSharedPtr<FTDTask> CreateTaskObject(const TObjectPtr<UObject> Executor) override;
 };

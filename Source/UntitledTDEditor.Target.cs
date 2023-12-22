@@ -16,6 +16,6 @@ public class UntitledTDEditorTarget : TargetRules
 
 	private void RegisterModulesCreatedByRider()
 	{
-		ExtraModuleNames.AddRange(new string[] {"Player", "TD_UI", "Building", "TD_Helpers"});
+		ExtraModuleNames.AddRange(new string[] {"Player", "TD_UI", "Building", "TD_Helpers", "TDTaskSystem", "TDInterfaces", "MiscGameplay", "TDUnits", "TDPathfinding", "TDVisualizers" });
 	}
 }
