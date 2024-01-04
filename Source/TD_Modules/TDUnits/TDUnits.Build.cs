@@ -12,7 +12,8 @@ public class TDUnits : ModuleRules
                 "Core", 
                 "MiscGameplay", 
                 "TDInterfaces",
-                "TDTaskSystem"
+                "TDTaskSystem", 
+                "TDPathfinding"
             }
         );
 
@@ -22,7 +23,8 @@ public class TDUnits : ModuleRules
                 "CoreUObject",
                 "Engine",
                 "Slate",
-                "SlateCore"
+                "SlateCore", 
+                "TDPathfinding"
             }
         );
     }

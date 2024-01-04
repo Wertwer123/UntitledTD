@@ -14,6 +14,9 @@ class TDPATHFINDING_API UTDGridComponent : public UActorComponent
 
 public:
 	int32 GetGridDrawWidth() const {return GridDrawWidth;}
+	bool DrawSubGrids() const {return bDrawSubGrids;}
+	bool DrawGrids() const {return bDrawGrids;}
+	bool DrawConnections() const {return bDrawConnections;}
 	TObjectPtr<UTDGridCollection> GetGrids() const {return  GridToBake;}
 	FVector GetGridReferencePosition() const
 	{
@@ -27,6 +30,15 @@ private:
 
 	UPROPERTY(EditInstanceOnly, Category= "GridVisualization")
 	int32 GridDrawWidth = 50;
+
+	UPROPERTY(EditInstanceOnly, Category= "GridVisualization")
+	bool bDrawGrids = false;
+	
+	UPROPERTY(EditInstanceOnly, Category= "GridVisualization")
+	bool bDrawSubGrids = false;
+	
+	UPROPERTY(EditInstanceOnly, Category= "GridVisualization")
+	bool bDrawConnections = false;
 	
 	UPROPERTY(EditAnywhere, Category= "GridVisualization")
 	TObjectPtr<UTDGridCollection> GridToBake = nullptr;

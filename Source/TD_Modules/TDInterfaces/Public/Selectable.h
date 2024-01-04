@@ -18,5 +18,7 @@ class TDINTERFACES_API ISelectable
 public:
 	UFUNCTION()
 	virtual void OnSelect(){};
-	
+
+	UFUNCTION()
+	virtual void OnDeselect(){};
 };

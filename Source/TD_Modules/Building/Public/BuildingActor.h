@@ -28,6 +28,7 @@ public:
 	FUnitCollectionPoint UnitMovePoint;
 	
 	virtual void OnSelect() override;
+	virtual void OnDeselect() override;
 	virtual void RecieveDamage(const ETDOffensiveStatType TypeOfDmgToDeal, const int32 Dmg) override;
 	virtual void RecieveTask(const TSharedPtr<FTDTask> RecievedTask) override;
 	virtual void SetupBuilding(const TObjectPtr<const UBuildingData> BuildingData);

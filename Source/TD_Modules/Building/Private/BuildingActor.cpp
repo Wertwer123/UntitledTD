@@ -22,6 +22,11 @@ void ABuildingActor::OnSelect()
 	OnBuildingSelected.Execute(BuildingName);
 }
 
+void ABuildingActor::OnDeselect()
+{
+	
+}
+
 void ABuildingActor::RecieveDamage(const ETDOffensiveStatType DmgToTake, const int32 Dmg)
 {
 	

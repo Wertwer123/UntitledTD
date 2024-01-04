@@ -20,6 +20,15 @@ class PLAYER_API USelectionSubsystem : public UWorldSubsystem
 
 public:
 	UPROPERTY()
+	bool bExecutedMassSelection = false;
+
+	UPROPERTY()
+	FVector2D StartPositionBoxSelection = FVector2D::Zero();
+
+	UPROPERTY()
+	FVector2D EndPositionBoxSelection = FVector2D::Zero();
+	
+	UPROPERTY()
 	TObjectPtr<USelectionSettings> SelectionSettings = nullptr;
 
 	UPROPERTY()
@@ -33,14 +42,28 @@ public:
 private:
 	UPROPERTY()
 	TObjectPtr<UObject> CurrentlySelectedObject = nullptr;
+
+	UPROPERTY()
+	TArray<TObjectPtr<UObject>> CurrentlySelectedObjects{};
 	
 	UPROPERTY()
 	TEnumAsByte<ECollisionChannel> SelectableTraceChannel;
-
+	
 	UPROPERTY()
 	TObjectPtr<ATDPlayerController> PlayerController = nullptr;
-	
+
+	UFUNCTION()
+	void StartCreatingSelectionBox(const FInputActionValue& InputActionValue);
+
+	UFUNCTION()
+	void FormSelectionBox(const FInputActionValue& InputActionValue);
+
+	UFUNCTION()
+	void MassSelectUnits(const FInputActionValue& InputActionValue);
+
+	UFUNCTION()
 	void TrySelectSelectable(const FInputActionValue& InputActionValue);
+	
 	void SetSelectableTraceChannel();
 	virtual void OnWorldBeginPlay(UWorld& InWorld) override;
 };

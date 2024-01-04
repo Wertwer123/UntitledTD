@@ -11,6 +11,7 @@ public class TDTaskSystem : ModuleRules
             {
                 "Core", 
                 "TDUnits", 
+                "TDPathfinding"
             }
         );
 
@@ -23,7 +24,7 @@ public class TDTaskSystem : ModuleRules
                 "SlateCore", 
                 "Building",
                 "MiscGameplay", 
-                "UntitledTD"
+                "UntitledTD",
             }
         );
     }

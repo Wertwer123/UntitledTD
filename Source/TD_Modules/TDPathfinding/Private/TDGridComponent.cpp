@@ -10,6 +10,6 @@ void UTDGridComponent::GenerateGrid()
 	FlushPersistentDebugLines(GetWorld());
 	if(GridToBake)
 	{
-		GridToBake->GenerateGrids();
+		GridToBake->GenerateGrids(this);
 	}
 }

@@ -70,8 +70,9 @@ void APlayerHud::OnBuildingSelected(const FName& BuildingName)
 void APlayerHud::OnUnitSelected(const FName& UnitName)
 {
 	if(!UnitDataBase) return;
+	if(UnitName.IsEqual("None")) return;
 
-	TObjectPtr<const UUnitData> UnitData = UnitDataBase->GetUnit(UnitName);
+	const TObjectPtr<const UUnitData> UnitData = UnitDataBase->GetUnit(UnitName);
 
 	//TEMP
 	if(!UnitData) return;

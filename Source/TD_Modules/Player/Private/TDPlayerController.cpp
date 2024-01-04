@@ -56,7 +56,12 @@ void ATDPlayerController::RotateCamera(const FInputActionValue& InputActionValue
 
 	CurrentDegreesOnCircle += RotationAmount * RotationSpeed * GetWorld()->GetDeltaSeconds();
 	
-	FHitResult HitResult = GroundRayCast(PositionToReach);
+	SetCameraPosition(CurrentDegreesOnCircle);
+}
+
+void ATDPlayerController::SetCameraPosition(const float Degrees)
+{
+	FHitResult HitResult = GroundRayCast(PositionToReach, GetPawn()->GetActorForwardVector() );
 	FTransform CenterOfCircle = FTransform::Identity;
 	const FVector GroundHitLocation = HitResult.Location;
 	const FVector PlayerLocation = GetPawn()->GetActorLocation();
@@ -70,7 +75,7 @@ void ATDPlayerController::RotateCamera(const FInputActionValue& InputActionValue
 	double RadiusOfCircle = B;
 
 	//then get the position on that circle by our rotated degrees
-	double RotationAmountInRadians = FMath::DegreesToRadians(CurrentDegreesOnCircle);
+	double RotationAmountInRadians = FMath::DegreesToRadians(Degrees);
 	double XCoordinateOnCircle = RadiusOfCircle * FMath::Sin(RotationAmountInRadians);
 	double YCoordinateOnCircle = RadiusOfCircle * FMath::Cos(RotationAmountInRadians);
 
@@ -92,7 +97,7 @@ void ATDPlayerController::RotateCamera(const FInputActionValue& InputActionValue
 
 void ATDPlayerController::AdjustCameraToGroundHeight(const float DeltaTime)
 {
-	FHitResult GroundHitResult = GroundRayCast(PositionToReach);
+	FHitResult GroundHitResult = GroundRayCast(PositionToReach, FVector::DownVector);
 	
 	if(GroundHitResult.bBlockingHit)
 	{
@@ -105,20 +110,17 @@ void ATDPlayerController::LockMouseCursorToViewPort()
 {
 	FInputModeGameAndUI NewInputMode;
 	NewInputMode.SetLockMouseToViewportBehavior(EMouseLockMode::LockAlways);
-
+	NewInputMode.SetHideCursorDuringCapture(false);
 	SetInputMode(NewInputMode);
 }
 
-FHitResult ATDPlayerController::GroundRayCast(const FVector& From)
+FHitResult ATDPlayerController::GroundRayCast(const FVector& From, const FVector& Direction)
 {
 	FHitResult OutHitResult;
 	
 	if(UWorld* World = GetWorld())
 	{
-		
-		const FVector RayCastEnd = From + GetPawn()->GetActorForwardVector() *  LineTraceLength;
-
-		DrawDebugLine(World, GetPawn()->GetActorLocation(), RayCastEnd, FColor::Red);
+		const FVector& RayCastEnd = From + Direction *  LineTraceLength;
 		World->LineTraceSingleByChannel(OutHitResult, GetPawn()->GetActorLocation(), RayCastEnd, GroundCollisionChannel);
 	}
 
@@ -163,8 +165,11 @@ void ATDPlayerController::BeginPlay()
 	Super::BeginPlay();
 	
 	LockMouseCursorToViewPort();
+	CurrentDegreesOnCircle = StartDegrees;
 	HeightOffsetCamera = MaxHeightOffsetCamera;
 	PositionToReach = GetPawn()->GetActorLocation();
+	
+	SetCameraPosition(CurrentDegreesOnCircle);
 }
 
 void ATDPlayerController::Tick(float DeltaSeconds)

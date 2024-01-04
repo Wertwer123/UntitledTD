@@ -23,6 +23,9 @@ public:
 	TObjectPtr<UTDPlayerInputComponent> GetPlayerInputComponent() {return PlayerInputComponent;}
 	
 private:
+
+	UPROPERTY(EditDefaultsOnly, meta=(ClampMin = 0, ClampMax = 360), Category= "Camera")
+	float StartDegrees = 0.0f;
 	
 	UPROPERTY(EditAnywhere, meta=(ClampMin = 0, ClampMax = 1), Category= "Movement")
 	float MinStartScrollPercentage = 0.1f;
@@ -54,6 +57,9 @@ private:
 	UPROPERTY(EditAnywhere, meta=( ClampMin = 0), Category= "Camera")
 	double InterpolationSpeed = 5;
 
+	UPROPERTY()
+	FVector PositionToReach = FVector::Zero();
+	
 	UPROPERTY(EditAnywhere, Category= "Camera")
 	TEnumAsByte<ECollisionChannel> GroundCollisionChannel;
 	
@@ -65,9 +71,6 @@ private:
 	
 	UPROPERTY(EditAnywhere, Category= "Input")
 	TObjectPtr<UInputAction> ZoomInCamera;
-
-	UPROPERTY()
-	FVector PositionToReach = FVector::Zero();
 	
 	float CurrentDegreesOnCircle = 0;
 	float CircleRadius = 0;
@@ -75,12 +78,13 @@ private:
 	void MoveCamera(const float DeltaSeconds);
 	void ZoomCamera(const FInputActionValue& InputActionValue);
 	void RotateCamera(const FInputActionValue& InputActionValue);
+	void SetCameraPosition(const float Degrees);
 	void ComputeCameraMovement(const float DeltaSeconds);
 	void AdjustCameraToGroundHeight(const float DeltaTime);
 	void LockMouseCursorToViewPort();
 
 	///Shoots a raycast in the forward direction of the player
-	FHitResult GroundRayCast(const FVector& From);
+	FHitResult GroundRayCast(const FVector& From, const FVector& Direction);
 	FVector GetCameraXYMovement(const int32 XViewPortSize, const int32 YViewPortSize, const float MouseX, const float MouseY);
 	
 	virtual void BeginPlay() override;

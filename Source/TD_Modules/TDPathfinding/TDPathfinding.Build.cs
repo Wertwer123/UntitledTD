@@ -10,7 +10,7 @@ public class TDPathfinding : ModuleRules
         PublicDependencyModuleNames.AddRange(
             new string[]
             {
-                "Core",
+                "Core", 
             }
         );
 
@@ -20,7 +20,8 @@ public class TDPathfinding : ModuleRules
                 "CoreUObject",
                 "Engine",
                 "Slate",
-                "SlateCore"
+                "SlateCore",
+                "TDTaskSystem"
             }
         );
     }

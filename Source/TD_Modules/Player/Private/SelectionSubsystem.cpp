@@ -9,8 +9,46 @@
 #include "TDPlayerInputComponent.h"
 #include "Kismet/GameplayStatics.h"
 
+void USelectionSubsystem::StartCreatingSelectionBox(const FInputActionValue& InputActionValue)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Started Creating SelectionBox"))
+	FHitResult OutHitResult;
+	
+	float LocationX;
+	float LocationY;
+	UGameplayStatics::GetPlayerController(this, 0)->GetMousePosition(LocationX, LocationY);
+	StartPositionBoxSelection = FVector2D(LocationX, LocationY);
+	EndPositionBoxSelection = FVector2D(LocationX, LocationY);
+
+	UE_LOG(LogTemp, Warning, TEXT("Start position screen for box selection %s "), *StartPositionBoxSelection.ToString())
+	UE_LOG(LogTemp, Warning, TEXT("End position screen  for box selection %s "), *EndPositionBoxSelection.ToString())
+}
+
+void USelectionSubsystem::FormSelectionBox(const FInputActionValue& InputActionValue)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Froming selection Box"))
+	float LocationX;
+	float LocationY;
+	UGameplayStatics::GetPlayerController(this, 0)->GetMousePosition(LocationX, LocationY);
+
+	EndPositionBoxSelection = FVector2D(LocationX, LocationY);
+
+	UE_LOG(LogTemp, Warning, TEXT("End position screen  for box selection %s "), *EndPositionBoxSelection.ToString())
+}
+
+void USelectionSubsystem::MassSelectUnits(const FInputActionValue& InputActionValue)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Wasnt able to execute single select because we were mass selecting"))
+}
+
 void USelectionSubsystem::TrySelectSelectable(const FInputActionValue& InputActionValue)
 {
+	if(bExecutedMassSelection)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Wasnt able to execute single select because we were mass selecting"))
+		return;
+	}
+	
 	FHitResult OutHitResult;
 	ISelectable* Selectable = nullptr;
 	
@@ -18,13 +56,14 @@ void USelectionSubsystem::TrySelectSelectable(const FInputActionValue& InputActi
 
 	TObjectPtr<AActor> HitActor = OutHitResult.GetActor();
 
-	if(!HitActor)
+	if(!HitActor && CurrentlySelectedObject)
 	{
 		//Then we null the currently selected actor and reset the task grid
 		//We also broadcast that we have deselected our current object
 		OnObjectDeselected.Execute(CurrentlySelectedObject);
 		const TObjectPtr<APlayerHud> PlayerHud = Cast<APlayerHud>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
 		PlayerHud->ResetTaskGridToDefault();
+		Cast<ISelectable>(CurrentlySelectedObject)->OnDeselect();
 		CurrentlySelectedObject = nullptr;
 		return;
 	}
@@ -57,4 +96,7 @@ void USelectionSubsystem::OnWorldBeginPlay(UWorld& InWorld)
 	const TObjectPtr<const UInputAction> SelectBuildingInputAction = PlayerInputComponent->FindInputActionByName(EInputMappingContexts::Default, "IA_SelectBuilding");
 	
 	PlayerInputComponent->BindAction(SelectBuildingInputAction, ETriggerEvent::Completed, this, &USelectionSubsystem::TrySelectSelectable);
+	PlayerInputComponent->BindAction(SelectBuildingInputAction, ETriggerEvent::Started, this, &USelectionSubsystem::StartCreatingSelectionBox);
+	PlayerInputComponent->BindAction(SelectBuildingInputAction, ETriggerEvent::Triggered, this, &USelectionSubsystem::FormSelectionBox);
+	PlayerInputComponent->BindAction(SelectBuildingInputAction, ETriggerEvent::Completed, this, &USelectionSubsystem::MassSelectUnits);
 }
